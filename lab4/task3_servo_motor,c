@@ -1,0 +1,50 @@
+#include <Servo.h>
+
+const int servoPin = 9;
+
+const int buttonLeft = 2;
+const int buttonRight = 3;
+
+Servo myServo;
+
+int angle = 0;
+
+void setup() {
+  pinMode(buttonLeft, INPUT_PULLUP);
+  pinMode(buttonRight, INPUT_PULLUP);
+
+  myServo.attach(servoPin);
+  myServo.write(angle);
+}
+
+void loop() {
+
+  bool leftState = digitalRead(buttonLeft);
+  bool rightState = digitalRead(buttonRight);
+
+
+  if (leftState == LOW && rightState == LOW) {
+    angle = 0;
+    myServo.write(angle);
+    delay(200);
+    return;
+  }
+
+  if (leftState == LOW) {
+    angle += 10;
+    if (angle > 180) angle = 180;
+    myServo.write(angle);
+    delay(200);
+
+    while (digitalRead(buttonLeft) == LOW);
+  }
+
+  if (rightState == LOW) {
+    angle -= 10;
+    if (angle < 0) angle = 0;
+    myServo.write(angle);
+    delay(200);
+
+    while (digitalRead(buttonRight) == LOW);
+  }
+}
